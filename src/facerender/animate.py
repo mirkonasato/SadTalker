@@ -28,9 +28,6 @@ except:
     in_webui = False
 
 
-FPS = float(25)
-
-
 class AnimateFromCoeff():
 
     def __init__(self, sadtalker_path, device):
@@ -204,7 +201,7 @@ class AnimateFromCoeff():
         path = os.path.join(video_save_dir, video_name)
         return_path = path
 
-        imageio.mimsave(path, result, fps=FPS)
+        save_video_file(path, result)
 
         #### paste back then enhancers
         if enhancer:
@@ -214,9 +211,13 @@ class AnimateFromCoeff():
 
             try:
                 enhanced_images_gen_with_len = enhancer_generator_with_len(path, method=enhancer, bg_upsampler=background_enhancer)
-                imageio.mimsave(enhanced_path, enhanced_images_gen_with_len, fps=FPS)
+                save_video_file(enhanced_path, enhanced_images_gen_with_len)
             except:
                 enhanced_images_gen_with_len = enhancer_list(path, method=enhancer, bg_upsampler=background_enhancer)
-                imageio.mimsave(enhanced_path, enhanced_images_gen_with_len, fps=FPS)
+                save_video_file(enhanced_path, enhanced_images_gen_with_len)
 
         return return_path
+
+
+def save_video_file(path, data):
+    imageio.mimsave(path, data, fps=25, codec='libx264', quality=None, output_params=['-preset', 'ultrafast', '-crf', '0'])
