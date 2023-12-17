@@ -36,7 +36,7 @@ def main(args):
     preprocess_model = CropAndExtract(sadtalker_paths, device)
 
     audio_to_coeff = Audio2Coeff(sadtalker_paths,  device)
-    
+
     animate_from_coeff = AnimateFromCoeff(sadtalker_paths, device)
 
     #crop image and extract 3dmm from image
@@ -78,22 +78,22 @@ def main(args):
     if args.face3dvis:
         from src.face3d.visualize import gen_composed_video
         gen_composed_video(args, device, first_coeff_path, coeff_path, audio_path, os.path.join(save_dir, '3dface.mp4'))
-    
+
     #coeff2video
     data = get_facerender_data(coeff_path, crop_pic_path, first_coeff_path, audio_path, 
                                 batch_size, input_yaw_list, input_pitch_list, input_roll_list,
                                 expression_scale=args.expression_scale, still_mode=args.still, preprocess=args.preprocess, size=args.size)
-    
+
     result = animate_from_coeff.generate(data, save_dir, pic_path, crop_info, \
                                 enhancer=args.enhancer, background_enhancer=args.background_enhancer, preprocess=args.preprocess, img_size=args.size)
-    
+
     shutil.move(result, save_dir+'.mp4')
     print('The generated video is named:', save_dir+'.mp4')
 
     if not args.verbose:
         shutil.rmtree(save_dir)
 
-    
+
 if __name__ == '__main__':
 
     parser = ArgumentParser()  
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     parser.add_argument("--cpu", dest="cpu", action="store_true") 
     parser.add_argument("--face3dvis", action="store_true", help="generate 3d face and 3d landmarks") 
     parser.add_argument("--still", action="store_true", help="can crop back to the original videos for the full body aniamtion") 
-    parser.add_argument("--preprocess", default='crop', choices=['crop', 'extcrop', 'resize', 'full', 'extfull'], help="how to preprocess the images" ) 
+    parser.add_argument("--preprocess", default='crop', choices=['crop', 'extcrop', 'resize', 'extfull'], help="how to preprocess the images" ) 
     parser.add_argument("--verbose",action="store_true", help="saving the intermedia output or not" ) 
     parser.add_argument("--old_version",action="store_true", help="use the pth other than safetensor version" ) 
 
@@ -142,4 +142,3 @@ if __name__ == '__main__':
         args.device = "cpu"
 
     main(args)
-
